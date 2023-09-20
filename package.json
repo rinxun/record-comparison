@@ -1,6 +1,6 @@
 {
   "name": "@rinxun/record-comparison",
-  "version": "0.1.0-alpha.3",
+  "version": "1.0.0-beta.1",
   "description": "A TypeScript tool to compare array quickly and you can do something when matching",
   "license": "MIT",
   "private": false,
