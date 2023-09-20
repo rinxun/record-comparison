@@ -1,0 +1,64 @@
+{
+  "name": "@rinxun/record-comparison",
+  "version": "1.0.0-beta.1",
+  "description": "A TypeScript tool to compare array quickly and you can do something when matching",
+  "license": "MIT",
+  "private": false,
+  "main": "./dist/cjs.js",
+  "module": "./dist/esm.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/esm.mjs",
+      "require": "./dist/cjs.js",
+      "types": "./dist/core.d.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rinxun/record-comparison"
+  },
+  "author": {
+    "name": "Janden Ma",
+    "email": "janden_ma@qq.com",
+    "url": "https://github.com/JandneMa"
+  },
+  "bugs": {
+    "url": "https://github.com/rinxun/record-comparison/issues",
+    "email": "hello@rinxun.com"
+  },
+  "homepage": "https://github.com/rinxun/record-comparison#readme",
+  "keywords": [
+    "array",
+    "match",
+    "compare",
+    "comparison",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "scripts": {
+    "compile:esm": "./node_modules/.bin/tsc -p tsconfig-esm.json",
+    "compile:cjs": "./node_modules/.bin/tsc -p tsconfig-cjs.json",
+    "build": "rm -rf ./dist & yarn compile:esm & yarn compile:cjs "
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "files": [
+    "dist/",
+    ".gitignore",
+    "package.json",
+    "README.md",
+    "README_zh.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "@rinxun/check-equal": "^1.0.1"
+  }
+}

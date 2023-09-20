@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "pretty": true,
+    "strict": true,
+    "sourceMap": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "typeRoots": ["node_modules/@types"]
+  },
+  "include": [
+    "./**/*.ts",
+    "dist/esm/utils.d.mts",
+    "dist/esm/types.d.mts",
+    "dist/esm/index.d.mts",
+    "dist/esm/esm.d.mts",
+    "dist/esm/core.d.mts"
+  ],
+  "exclude": ["./node_modules", "*.test.ts", "**/*.spec.ts", "*.js", "dist"]
+}
