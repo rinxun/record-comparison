@@ -1,10 +1,9 @@
 {
   "name": "@rinxun/record-comparison",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "A TypeScript tool to compare array quickly and you can do something when matching",
   "license": "MIT",
   "private": false,
-  "type": "module",
   "main": "./dist/cjs.js",
   "module": "./dist/esm.mjs",
   "exports": {
