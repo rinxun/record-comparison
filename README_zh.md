@@ -64,7 +64,7 @@
   rc.masterFields = [{ field: "name", order: "DESC" }];
   rc.detailFields = [{ field: "name", order: "DESC" }];
 
-  while (rc.masterEof) {
+  while (!rc.masterEof) {
     while (rc.compare()) {
       rc.currentRow["amount"] =
         rc.currentRow["amount"] + rc.detailRow["amount"];
@@ -122,7 +122,7 @@
     [{ field: "name", order: "DESC" }]
   ];
   
-  while (rc.masterEof) {
+  while (!rc.masterEof) {
     while (rc.compare(0)) {
       rc.currentRow["amount"] =
         rc.currentRow["amount"] + rc.detailRow["amount"];
@@ -215,37 +215,38 @@
         - `order`是排序规则, 默认`'ASC'`表示升序，必须大写
   - masterEof
 
-    - 如果书签（book mark）大于主数组的长度，将返回`false`，则所有比对结束
+    - 如果书签（book mark）小于主数组的长度，将返回`false`，比对继续
+    - 反之则表示所有比对结束
     - 类型: `boolean`
-
+  
   - isSorted
-
+  
     - 如果你已经在外部函数完成数组排序，你需要将它设置为 true 来减少内部计算以确保性能
-
+  
   - compare(index?: number)
-
+  
     - 比对的核心方法
     - 类型： `Function`
     - 参数：
       - index: `number`, 作为多项比对的次数组指定索引, 默认为`0`
     - 返回值：`true`表示比对成功, 否则为`false`
-
+  
   - getMasterBookMark()
-
+  
     - 获取主数组当前书签（book mark），即主指针所在位置（从 0 开始）
-
+  
   - 返回值: `number`
   - getDetailBookMark(index?: number)
-
+  
     - 获取次数组当前书签（book mark），即次指针所在位置（从 0 开始）
     - 参数：
       - index: `number`, 作为多项比对的次数组指定索引, 默认为`0`
     - 返回值: `number`
-
+  
   - masterMoveNext()
-
+  
     - 当主数组单项和次数组单项无法比对，你需要调用此方法将主指针指向下一个主数组单项，为下一次比对做准备。
-
+  
   - detailMoveNext(index?: number)
     - 当主数组单项和次数组单项完成比对，你需要调用此方法将次指针指向下一个次数组单项，为下一次比对做准备。
     - 参数：
