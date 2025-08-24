@@ -68,7 +68,7 @@ If master item and detail item can't matched, you need to call `masterMoveNext()
   rc.masterFields = [{ field: "name", order: "DESC" }];
   rc.detailFields = [{ field: "name", order: "DESC" }];
   
-  while (rc.masterEof) {
+  while (!rc.masterEof) {
     while (rc.compare()) {
       rc.currentRow["amount"] = rc.currentRow["amount"] + rc.detailRow["amount"];
       rc.detailMoveNext();
@@ -125,7 +125,7 @@ If master item and detail item can't matched, you need to call `masterMoveNext()
     [{ field: "name", order: "DESC" }]
   ];
   
-  while (rc.masterEof) {
+  while (!rc.masterEof) {
     while (rc.compare(0)) {
       rc.currentRow["amount"] = rc.currentRow["amount"] + rc.detailRow["amount"];
       rc.detailMoveNext(0);
@@ -207,7 +207,8 @@ If master item and detail item can't matched, you need to call `masterMoveNext()
      - `field` is the field name
      - `order` is the ordering rule, default  `'ASC'` for `ascending` 
    - masterEof
-     - if book mark is greater than the length of master array, return `false` that means finish comparing
+     - if the book mark is less than the length of the master array, return `false`, the comparison will be continued
+     - otherwise,  that means the comparison is ended
      - Type: `boolean` 
    - isSorted
      - if you have sorted arrays in outer function, you should set it `true` to ensure the performance

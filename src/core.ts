@@ -1,23 +1,32 @@
 import { checkEqual } from "@rinxun/check-equal";
 import {
   isNil,
-  isEmpty,
   verifyRows,
   verifyFields,
-  SortArrayByFields
+  SortArrayByFields,
 } from "./utils";
 import type { TComparingFields, TRow, TRows, TRowsArray } from "./types";
 
 class RecordComparison<T extends TRow> {
   //#region constructor
   constructor(masterArray: Array<T>, detailArray: TRowsArray | TRows) {
-    const multiple: boolean =
-      detailArray.length > 0 && Array.isArray(detailArray[0]);
-    this._single = !multiple;
-    this._master = masterArray;
-    this._details = detailArray;
-    this._masterEof = this._masterBookMark < masterArray.length;
-    this._detailBookMarks = !multiple ? [0] : detailArray.map(() => 0);
+    if (isNil(masterArray) || isNil(detailArray)) {
+      throw new Error(
+        `"masterArray" or "detailArray" cannot be null or undefined`
+      );
+    }
+
+    if (verifyRows(masterArray, detailArray)) {
+      const multiple: boolean =
+        detailArray.length > 0 && Array.isArray(detailArray[0]);
+      this._single = !multiple;
+      this._master = masterArray;
+      this._details = detailArray;
+      this._masterEof = this._masterBookMark >= masterArray.length;
+      this._masterBookMark = 0;
+      this._detailBookMarks = !multiple ? [0] : detailArray.map(() => 0);
+      this._currentRow = masterArray[0];
+    }
   }
   //#endregion
 
@@ -131,65 +140,57 @@ class RecordComparison<T extends TRow> {
 
   public masterMoveNext(): void {
     this._masterBookMark += 1;
-    this._masterEof = this._masterBookMark < this._master.length;
+    this._masterEof = this._masterBookMark >= this._master.length;
+    if (!this._masterEof) {
+      this._currentRow = this._master[this._masterBookMark];
+    } else {
+      this._currentRow = null;
+    }
   }
 
   public detailMoveNext(index?: number): void {
     this._detailBookMarks[index || 0] += 1;
+    this._detailRow = this._single
+      ? this._details[this._detailBookMarks[index || 0]]
+      : (this._details as TRowsArray)[index || 0][
+          this._detailBookMarks[index || 0]
+        ];
   }
 
   public compare(index?: number): boolean {
     const _index: number = index || 0;
-    if (
-      isNil(this._master) ||
-      isNil(this._details) ||
-      !Array.isArray(this._master) ||
-      !Array.isArray(this._details)
-    ) {
-      return false;
-    }
-    if (isEmpty(this._master) || isEmpty(this._details)) {
-      return false;
-    }
-    if (!this._single && isEmpty(this._details[_index] as TRows)) {
-      return false;
-    }
     if (
       this._detailBookMarks[_index] >=
       (this._single ? this._details.length : this._details[_index].length)
     ) {
       return false;
     }
-    if (verifyRows(this._master, this._details)) {
-      if (!this._isSorted) {
-        this._master = SortArrayByFields(this._master, this._masterFields);
-        if (this._single) {
-          this._details = SortArrayByFields(this._details, this._detailFields);
-        } else {
-          this._details[_index] = SortArrayByFields(
-            (this._details as TRowsArray)[_index],
-            this.detailFieldsArr[_index]
-          );
-        }
-      }
-      this._currentRow = this._master[this._masterBookMark];
-      this._detailRow = this._single
-        ? this._details[this._detailBookMarks[_index]]
-        : (this._details as TRowsArray)[_index][this._detailBookMarks[_index]];
-      const res = this.processComparing(
-        this._currentRow,
-        this._detailRow,
-        this._masterFields,
-        this._single ? this._detailFields : this._detailFieldsArr[_index]
-      );
-      if (res === 1) {
-        this._detailBookMarks[_index] += 1;
-        return this.compare(_index);
+    if (!this._isSorted) {
+      this._master = SortArrayByFields(this._master, this._masterFields);
+      if (this._single) {
+        this._details = SortArrayByFields(this._details, this._detailFields);
       } else {
-        return res === 0;
+        this._details[_index] = SortArrayByFields(
+          (this._details as TRowsArray)[_index],
+          this.detailFieldsArr[_index]
+        );
       }
+    }
+    this._currentRow = this._master[this._masterBookMark];
+    this._detailRow = this._single
+      ? this._details[this._detailBookMarks[_index]]
+      : (this._details as TRowsArray)[_index][this._detailBookMarks[_index]];
+    const res = this.processComparing(
+      this._currentRow,
+      this._detailRow,
+      this._masterFields,
+      this._single ? this._detailFields : this._detailFieldsArr[_index]
+    );
+    if (res === 1) {
+      this._detailBookMarks[_index] += 1;
+      return this.compare(_index);
     } else {
-      return false;
+      return res === 0;
     }
   }
   //#endregion
