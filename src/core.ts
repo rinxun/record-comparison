@@ -8,7 +8,7 @@ import {
 import type { TComparingFields, TRow, TRows, TRowsArray } from "./types";
 
 class RecordComparison<T extends TRow> {
-  //#region constructor
+  // #region constructor
   constructor(masterArray: Array<T>, detailArray: TRowsArray | TRows) {
     if (isNil(masterArray) || isNil(detailArray)) {
       throw new Error(
@@ -28,9 +28,9 @@ class RecordComparison<T extends TRow> {
       this._currentRow = masterArray[0];
     }
   }
-  //#endregion
+  // #endregion
 
-  //#region private properties
+  // #region private properties
   private _single: boolean = true;
   /** if you have sorted arrays in outer function, you should set it `true` to ensure the performance */
   private _isSorted: boolean = false;
@@ -44,7 +44,7 @@ class RecordComparison<T extends TRow> {
   private _detailFieldsArr: Array<TComparingFields<TRow>> = [];
   private _masterBookMark: number = 0;
   private _detailBookMarks: Array<number> = [0];
-  //#endregion
+  // #endregion
 
   private processComparing(
     masterRow: T,
@@ -73,8 +73,8 @@ class RecordComparison<T extends TRow> {
     return ret;
   }
 
-  //#region getters and setters
-  /** if the `masterBookMark` is greater than the length of the master array, return `false` that means finish comparing */
+  // #region getters and setters
+  /** if the `masterBookMark` is greater than the length of the master array, return `true` that means finish comparing */
   get masterEof() {
     return this._masterEof;
   }
@@ -127,9 +127,9 @@ class RecordComparison<T extends TRow> {
   set detailFieldsArr(arr: Array<TComparingFields<TRow>>) {
     this._detailFieldsArr = arr;
   }
-  //#endregion
+  // #endregion
 
-  //#region public methods
+  // #region public methods
   public getMasterBookMark(): number {
     return this._masterBookMark;
   }
