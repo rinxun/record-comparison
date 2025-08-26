@@ -1,6 +1,6 @@
 {
   "name": "@rinxun/record-comparison",
-  "version": "1.1.0-beta.2",
+  "version": "1.1.0-beta.3",
   "description": "A TypeScript tool to compare array quickly and you can do something when matching",
   "license": "MIT",
   "private": false,
@@ -42,7 +42,8 @@
   "scripts": {
     "compile:esm": "./node_modules/.bin/tsc -p tsconfig-esm.json",
     "compile:cjs": "./node_modules/.bin/tsc -p tsconfig-cjs.json",
-    "build": "rm -rf ./dist & yarn compile:esm & yarn compile:cjs "
+    "backup": "cp -r ./dist ./dist-backup",
+    "build": "yarn backup & rm -rf ./dist & yarn compile:esm & yarn compile:cjs "
   },
   "devDependencies": {
     "typescript": "^5.2.2"
